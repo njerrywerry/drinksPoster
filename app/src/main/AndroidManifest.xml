@@ -2,40 +2,49 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="alienske.chillspot" >
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/drink"
         android:label="ChillSpot"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".Splash"
-            android:label="ChillSpot" >
+            android:label="@string/title_activity_splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MyIntro"
+            android:label="ChillSpot" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:label="ChillSpot" >
             <intent-filter>
                 <action android:name="alienske.chillspot.MainActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".One"
             android:label="ChillSpot" >
             <intent-filter>
                 <action android:name="alienske.chillspot.One" />
-                <category android:name="android.intent.category.DEFAULT" />
 
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
