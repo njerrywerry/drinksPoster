@@ -1,5 +1,9 @@
 package alienske.chillspot;
 
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -10,26 +14,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity  {
 
-//    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+   private GoogleMap mMap; // Might be null if Google Play services APK is not available.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-//        setUpMapIfNeeded();
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        setUpMapIfNeeded();
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+    }
 //
 //    /**
 //     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -46,18 +48,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //     * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
 //     * method in {@link #onResume()} to guarantee that it will be called.
 //     */
-//    private void setUpMapIfNeeded() {
-//        // Do a null check to confirm that we have not already instantiated the map.
-//        if (mMap == null) {
-//            // Try to obtain the map from the SupportMapFragment.
-//            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-//                    .getMap();
-//            // Check if we were successful in obtaining the map.
-//            if (mMap != null) {
-//                setUpMap();
-//            }
-//        }
-//    }
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+                    .getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+    }
 //
 //    /**
 //     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
@@ -65,19 +67,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //     * <p/>
 //     * This should only be called once and when we are sure that {@link #mMap} is not null.
 //     */
-//    private void setUpMap() {
-//        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-//    }
+    private void setUpMap() {
+        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker").snippet("Snippet"));
+        // Enable MyLocation Layer of Google Map
+        mMap.setMyLocationEnabled(true);
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng nairobi = new LatLng(-1.2833, 36.8167);
-        map.addMarker(new MarkerOptions()
-                .position(nairobi)
-                .snippet("Nairobi; the city of lights.")
-                .title("Nairobi"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(nairobi));
+        // Get LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Create a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+
+        // Get the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        // Get Current Location
+        Location myLocation = locationManager.getLastKnownLocation(provider);
+
+        // set map type
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        // Get latitude of the current location
+        double latitude = myLocation.getLatitude();
+
+        // Get longitude of the current location
+        double longitude = myLocation.getLongitude();
+
+        // Create a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        // Show the current location in Google Map
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Zoom in the Google Map
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
+                .title("You are here!")
+                .snippet("Consider yourself located"));
     }
+
+//    this is where the map displays a specific hard-coded location ie. Nairobi
+//    @Override
+//    public void onMapReady(GoogleMap map) {
+//        // Add a marker in Sydney, Australia, and move the camera.
+//        LatLng nairobi = new LatLng(-1.2833, 36.8167);
+//        map.addMarker(new MarkerOptions()
+//                .position(nairobi)
+//                .snippet("Nairobi; the city of lights.")
+//                .title("Nairobi"));
+//        map.moveCamera(CameraUpdateFactory.newLatLng(nairobi));
+//    }
 
 }
